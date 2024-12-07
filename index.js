@@ -27,6 +27,18 @@ app.get('/info', (req, res) => {
     `);
   });
 
+// Route to retrieve a person by ID - part 3.3
+// Can find person by id - http://localhost:3001/api/persons/2
+app.get('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id);
+  const person = persons.find(p => p.id === id);
+  if (person) {
+    res.json(person);
+  } else {
+    res.status(404).json({ error: 'Person not found !!' });
+  }
+});
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
