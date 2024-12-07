@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 const app = express();
 const PORT = 3001;
 
@@ -12,6 +13,9 @@ let persons = [
 
 // Enable JSON parsing for requests
 app.use(express.json());
+
+// Morgan logging! 
+app.use(morgan('tiny'));
 
 // Route to retrieve all persons
 app.get('/api/persons', (_req, res) => {
