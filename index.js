@@ -54,7 +54,7 @@ app.delete('/api/persons/:id', (req, res) => {
   });
 
 
-// Route to add a new person - part 3.5
+// Route to add a new person - part 3.5 - 3.6 as well
 // Can add person - http://localhost:3001/api/persons
 app.post('/api/persons', (req, res) => {
     const body = req.body;
@@ -62,6 +62,12 @@ app.post('/api/persons', (req, res) => {
     if (!body.name || !body.number) {
     return res.status(400).json({ error: 'name or number missing' });
     }
+
+    // Check if name already exists - part 3.6
+    if (persons.some(person => person.name === body.name)) {
+      return res.status(400).json({ error: 'name must be unique !!' });
+    }
+
 
     const person = {
     id: persons.length + 1,
