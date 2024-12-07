@@ -18,6 +18,15 @@ app.get('/api/persons', (_req, res) => {
   res.json(persons);
 });
 
+// add info page -  part 3.2
+app.get('/info', (req, res) => {
+    const date = new Date();
+    res.send(`
+      <p>Phonebook has info for ${persons.length} people</p>
+      <p>${date}</p>
+    `);
+  });
+
 // Start the server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
