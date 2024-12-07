@@ -52,7 +52,27 @@ app.delete('/api/persons/:id', (req, res) => {
     persons = persons.filter(p => p.id !== id);
     res.status(204).end();
   });
-  
+
+
+// Route to add a new person - part 3.5
+// Can add person - http://localhost:3001/api/persons
+app.post('/api/persons', (req, res) => {
+    const body = req.body;
+
+    if (!body.name || !body.number) {
+    return res.status(400).json({ error: 'name or number missing' });
+    }
+
+    const person = {
+    id: persons.length + 1,
+    name: body.name,
+    number: body.number,
+    };
+    console.log(`Adding: ${JSON.stringify(person)}`);
+
+    persons = persons.concat(person);
+    res.json(person);
+});
 
 // Start the server
 app.listen(PORT, () => {
