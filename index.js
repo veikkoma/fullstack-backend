@@ -15,7 +15,13 @@ let persons = [
 app.use(express.json());
 
 // Morgan logging! 
-app.use(morgan('tiny'));
+morgan.token('post-data', (req) => {
+    return req.method === 'POST' ? JSON.stringify(req.body) : '';
+  });
+
+app.use(
+  morgan(':method :url :status - :response-time ms :post-data')
+  );
 
 // Route to retrieve all persons
 app.get('/api/persons', (_req, res) => {
