@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const path = require('path');
 const cors = require('cors');
 const app = express();
 
@@ -23,6 +24,9 @@ morgan.token('post-data', (req) => {
 app.use(
   morgan(':method :url :status - :response-time ms :post-data')
   );
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'build')));
 
 // Route to retrieve all persons
 app.get('/api/persons', (_req, res) => {
@@ -90,6 +94,11 @@ app.post('/api/persons', (req, res) => {
     persons = persons.concat(person);
     res.json(person);
 });
+
+// Handle any other requests by serving the React app
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  });
 
 // Start the server
 const PORT = process.env.PORT || 3001
