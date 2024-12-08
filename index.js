@@ -80,7 +80,7 @@ app.delete('/api/persons/:id', (req, res) => {
 
 // Route to add a new person - part 3.5 - 3.6 as well
 // Can add person - http://localhost:3001/api/persons
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body;
 
     if (!body.name || !body.number) {
@@ -92,17 +92,20 @@ app.post('/api/persons', (req, res) => {
       return res.status(400).json({ error: 'name must be unique !!' });
     }
 
+    // create a new person to mongodb
+    const person = new Person({
+        name: body.name,
+        number: body.number,
+    });
 
-    const person = {
-    id: persons.length + 1,
-    name: body.name,
-    number: body.number,
-    };
-    console.log(`Adding: ${JSON.stringify(person)}`);
-
-    persons = persons.concat(person);
-    res.json(person);
-});
+    // save person to mongodb
+    person
+        .save()
+        .then(savedPerson => {
+        res.json(savedPerson);
+        })
+        .catch(error => next(error)); // error catch
+    });
 
 // Handle any other requests by serving the React app
 app.get('*', (req, res) => {
