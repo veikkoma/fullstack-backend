@@ -1,3 +1,6 @@
+require('dotenv').config();
+const Person = require('./models/person');
+
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
@@ -28,19 +31,25 @@ app.use(
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'build')));
 
-// Route to retrieve all persons
+// Route to retrieve all persons - updated 3.13
 app.get('/api/persons', (_req, res) => {
-  res.json(persons);
-});
-
-// add info page -  part 3.2
-app.get('/info', (req, res) => {
-    const date = new Date();
-    res.send(`
-      <p>Phonebook has info for ${persons.length} people</p>
-      <p>${date}</p>
-    `);
+    Person.find({}).then((persons) => {
+      res.json(persons);
+    });
   });
+  
+
+// add info page -  part 3.2 - updated 3.13
+app.get('/info', (_req, res) => {
+    Person.countDocuments({}).then((count) => {
+      const date = new Date();
+      res.send(`
+        <p>Phonebook has info for ${count} people</p>
+        <p>${date}</p>
+      `);
+    });
+  });
+  
 
 // Route to retrieve a person by ID - part 3.3
 // Can find person by id - http://localhost:3001/api/persons/2
